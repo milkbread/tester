@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Tester
+_Comment=Tester application
+Categories=GNOME;Utility;
+Exec=tester
+Icon=tester
+Terminal=false
+Type=Application

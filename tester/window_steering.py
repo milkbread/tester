@@ -1,0 +1,119 @@
+from gi.repository import Gio, Gtk # pylint: disable=E0611
+
+#tutorial: http://python-gtk-3-tutorial.readthedocs.org/en/latest/layout.html
+class MyManualWindow(Gtk.Window):
+    var = ""
+
+    def __init__(self, input):
+	Gtk.Window.__init__(self, title=input)
+
+        self.box = Gtk.Box(spacing=6)
+        self.add(self.box)
+
+        self.button1 = Gtk.Button(label="Hello")
+        self.button1.connect("clicked", self.on_button1_clicked)
+        self.box.pack_start(self.button1, True, True, 0)
+
+        self.button2 = Gtk.Button(label="Goodbye")
+        self.button2.connect("clicked", self.on_button2_clicked)
+        self.box.pack_start(self.button2, True, True, 0)
+
+	self.label = Gtk.Label()
+	self.label.set_label(input)
+	self.label.set_angle(0)
+	self.label.set_halign(Gtk.Align.END)
+	self.box.pack_start(self.label, True, True, 0)
+
+    	name_combo = Gtk.ComboBox.new()
+	dir(name_combo)
+        #name_combo.connect("changed", self.on_name_combo_changed)
+	self.box.pack_start(name_combo, True, True, 0)
+	
+
+
+    def on_button1_clicked(self, widget, input = "Changed by variable"):
+        self.label.set_label(input)
+
+    def on_button2_clicked(self, widget):
+	self.label.set_label("Directly changed")
+	
+    def changeLabel(self, input):
+	self.label.set_label(input)
+
+    def closeWindow(self):
+	self.destroy()
+	
+    
+def showManualWindow(test):
+	
+	win = MyManualWindow(test)
+	#win.set_decorated (True)
+	#win.connect("delete-event", Gtk.main_quit)
+	win.show_all()
+	#print dir(win)
+	#Gtk.main()
+	return win
+
+#**************************************************************************
+
+class MyAutomaticWindow(Gtk.Window):
+    
+	def __init__(self, text, file, name):
+		#basics for loading a *.glade file
+		builder = Gtk.Builder()
+		builder.add_from_file(file)
+		self.window = builder.get_object(name)
+
+		#load the buttons and connect them to functions
+		builder.get_object('button1').connect("clicked", self.on_button1_clicked)
+		builder.get_object('button2').connect("clicked", self.on_button2_clicked)
+	
+		#load the label and set new content
+		self.label2 = builder.get_object('label2')
+		self.label2.set_label(text)
+
+		#initiate new, additional button
+		self.button3 = Gtk.Button(label="Additional button")
+		self.button3.connect("clicked", self.on_button3_clicked)
+		#load box and add the new button
+		self.box = builder.get_object('box1')
+		self.box.pack_start(self.button3, True, True, 0)
+	
+
+	def getWindow(self):
+		return self.window
+
+	def on_button1_clicked(self, widget, input = "Changed by variable"):
+		self.label2.set_label(input)
+
+	def on_button2_clicked(self, widget):
+		self.label2.set_label("Directly changed")
+
+	def on_button3_clicked(self, widget):
+		self.label2.set_label("Changed by additional button")
+
+
+	def changeLabelFromOutside(self, input):
+		self.label2.set_label(input)
+
+	def closeWindow(self):
+		self.destroy()
+	
+
+def show2ndWindow(text, name, file):
+	win = MyAutomaticWindow(text, file, name).getWindow()
+	win.show_all()
+	
+#************************************+
+#Quick version for loading a glade-file
+def openGladeWindow(name, file):
+	#tutorial: http://python-gtk-3-tutorial.readthedocs.org/en/latest/builder.html
+	builder = Gtk.Builder()
+	builder.add_from_file(file)
+	
+	window = builder.get_object(name)
+	window.show_all()
+	return window
+
+
+	

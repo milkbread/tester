@@ -1,0 +1,19 @@
+#!/usr/bin/python
+import pycurl
+
+def simpleRequest(url):
+    buf = cStringIO.StringIO()
+ 
+    c = pycurl.Curl()
+    c.setopt(c.URL, url)
+    c.setopt(c.WRITEFUNCTION, buf.write)
+    c.perform()
+     
+    response = buf.getvalue()
+    buf.close()
+    return response
+
+url = "http://www.studentenwerk-dresden.de/mensen/speiseplan/w0-d1.html"
+print simpleRequest(url)
+
+
